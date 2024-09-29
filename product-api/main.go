@@ -13,8 +13,6 @@ import (
 
 func main() {
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
-	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
 	ph := handlers.NewProducts(l)
 
 	sm := http.NewServeMux()
