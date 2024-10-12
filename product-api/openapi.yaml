@@ -1,0 +1,102 @@
+components:
+    schemas:
+        data.Product:
+            properties:
+                description:
+                    type: string
+                id:
+                    type: integer
+                name:
+                    type: string
+                price:
+                    type: number
+                sku:
+                    type: string
+            required:
+                - name
+                - sku
+            type: object
+    securitySchemes:
+        bearerAuth:
+            bearerFormat: JWT
+            scheme: bearer
+            type: http
+info:
+    contact: {}
+    title: ""
+    version: ""
+openapi: 3.0.3
+paths:
+    /:
+        get:
+            description: Get all products
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: '#/components/schemas/data.Product'
+                                type: array
+                    description: OK
+            summary: Returns a list of products
+            tags:
+                - products
+        post:
+            description: Create a new product
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/data.Product'
+                description: Product to add
+                required: true
+                x-originalParamName: product
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/data.Product'
+                    description: Created
+            summary: Adds a new product
+            tags:
+                - products
+    /{id}:
+        put:
+            description: Update an existing product by ID
+            parameters:
+                - description: Product ID
+                  in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/data.Product'
+                description: Updated product
+                required: true
+                x-originalParamName: product
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/data.Product'
+                    description: OK
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                    description: Product not found
+            summary: Updates a product
+            tags:
+                - products
+security:
+    - bearerAuth: []
+servers:
+    - url: http://localhost:9090

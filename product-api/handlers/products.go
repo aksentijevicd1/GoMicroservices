@@ -1,3 +1,17 @@
+// Package classification of Product API
+//
+// # Documentation for Product API
+//
+// Schemes: http
+// BasePath: /
+// Version: 1.0.0
+//
+// Consumes:
+// - application/json
+//
+// Produces:
+// - application/json
+// swagger:meta
 package handlers
 
 import (
@@ -15,10 +29,29 @@ type Products struct {
 	l *log.Logger
 }
 
+type productsResponseWrapper struct {
+	Body []data.Product
+}
+
+type productsNoContent struct {
+}
+
+type productIDParameterWrapper struct {
+	ID int `json:"id`
+}
+
 func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
+// GetProducts returns a list of products
+// @Summary Returns a list of products
+// @Description Get all products
+// @Tags products
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} data.Product
+// @Router / [get]
 func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle GET Products")
 
@@ -30,6 +63,15 @@ func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// AddProduct adds a new product
+// @Summary Adds a new product
+// @Description Create a new product
+// @Tags products
+// @Accept  json
+// @Produce  json
+// @Param product body data.Product true "Product to add"
+// @Success 201 {object} data.Product
+// @Router / [post]
 func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle POST Product")
 
@@ -37,6 +79,17 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 	data.AddProduct(&prod)
 }
 
+// UpdateProducts updates a product by ID
+// @Summary Updates a product
+// @Description Update an existing product by ID
+// @Tags products
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Product ID"
+// @Param product body data.Product true "Updated product"
+// @Success 200 {object} data.Product
+// @Failure 404 {string} string "Product not found"
+// @Router /{id} [put]
 func (p Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
